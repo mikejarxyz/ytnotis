@@ -14,6 +14,10 @@ def generate_new_token():
     """Generates a secure random token."""
     return hashlib.sha256(os.urandom(32)).hexdigest()[:32]
 
+def get_current_token():
+    """Returns the current WebSub token."""
+    return CURRENT_TOKEN
+
 def subscribe_websub(token):
     """Subscribes YouTube WebSub with the given token."""
     callback_url = f"{LOCAL_WEBHOOK_URL}/webhook?token={quote(token)}"

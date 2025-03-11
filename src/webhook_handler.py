@@ -6,10 +6,13 @@ from src.youtube_api import fetch_youtube_video_data
 from src.discord_notifier import send_discord_message
 from src.logger import log_message
 from src.utils import generate_discord_message, should_notify
-from src.token_manager import CURRENT_TOKEN
+from src.token_manager import get_current_token
 
 def youtube_webhook():
     """Handles YouTube WebSub webhook."""
+
+    token = get_current_token()
+
     if request.method == 'GET':
         hub_challenge = request.args.get("hub.challenge")
         if hub_challenge:
@@ -17,8 +20,8 @@ def youtube_webhook():
         else:
             return jsonify({"error": "Missing challenge token"}), 400
     
-    if request.args.get("token") != CURRENT_TOKEN:
-        log_message(f"🔒 Invalid token presented, aborting. Current token: {CURRENT_TOKEN}")
+    if request.args.get("token") != token:
+        log_message(f"🔒 Invalid token presented, aborting. Current token: {token}")
         return jsonify({"error": "Invalid token"}), 403
     
     try:
