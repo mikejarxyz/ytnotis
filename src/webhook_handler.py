@@ -21,7 +21,7 @@ def youtube_webhook():
             return jsonify({"error": "Missing challenge token"}), 400
     
     if request.args.get("token") != token:
-        log_message(f"🔒 Invalid token presented, aborting. Current token: {token}")
+        log_message(f"🔒 Invalid token presented, aborting.")
         return jsonify({"error": "Invalid token"}), 403
     
     try:
