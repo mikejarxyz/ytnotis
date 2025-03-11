@@ -12,7 +12,10 @@ def youtube_webhook():
     """Handles YouTube WebSub webhook."""
     if request.method == 'GET':
         hub_challenge = request.args.get("hub.challenge")
-        return hub_challenge if hub_challenge else jsonify({"error": "Missing challenge token"}), 400
+        if hub_challenge:
+          return hub_challenge, 200
+        else:
+            return jsonify({"error": "Missing challenge token"}), 400
     
     if request.args.get("token") != CURRENT_TOKEN:
         return jsonify({"error": "Invalid token"}), 403
