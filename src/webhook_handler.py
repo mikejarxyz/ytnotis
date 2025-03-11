@@ -6,7 +6,7 @@ from src.youtube_api import fetch_youtube_video_data
 from src.discord_notifier import send_discord_message
 from src.logger import log_message
 from src.utils import generate_discord_message, should_notify
-from src.config import CURRENT_TOKEN
+from src.token_manager import CURRENT_TOKEN
 
 webhook_bp = Blueprint('webhook', __name__)
 
