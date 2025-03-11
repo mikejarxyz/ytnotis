@@ -24,19 +24,11 @@ os.makedirs(DATA_DIR, exist_ok=True)
 LOG_FILE = os.path.join(LOGS_DIR, "ytnotis.log")
 DB_FILE = os.path.join(DATA_DIR, "yt_video_ids.db")
 
-# YouTube Channel ID
+# Get VARS from .env
 CHANNEL_ID = os.getenv("YOUTUBE_CHANNEL_ID")
-
-# Get YouTube API key from .env
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
-
-# Discord Role ID
 DISCORD_NOTI_ROLE = os.getenv("DISCORD_NOTI_ROLE")
-
-# Discord Webhook URL
 DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
-
-# The webhook URL
 LOCAL_WEBHOOK_URL = os.getenv("LOCAL_WEBHOOK_URL")
 
 # Validation to ensure required environment variables exist
