@@ -1,12 +1,12 @@
 import sqlite3
 
-from src.config import DB_PATH
+from src.config import DB_FILE
 from src.logger import log_message
 
 def initialize_database():
     """Creates the database and videos table if they don't exist."""
     try:
-        conn = sqlite3.connect(DB_PATH)
+        conn = sqlite3.connect(DB_FILE)
         cursor = conn.cursor()
         cursor.execute(
             """
@@ -25,7 +25,7 @@ def initialize_database():
 def store_video_id(video_id: str, published: str = None):
     """Insert video ID and published timestamp into the database."""
     try:
-        conn = sqlite3.connect(DB_PATH)
+        conn = sqlite3.connect(DB_FILE)
         cursor = conn.cursor()
         cursor.execute("INSERT INTO videos (video_id, published) VALUES (?, ?)", (video_id, published))
         conn.commit()
@@ -40,7 +40,7 @@ def store_video_id(video_id: str, published: str = None):
 def is_video_in_db(video_id: str) -> bool:
     """Check if the video ID already exists in the database."""
     try:
-        conn = sqlite3.connect(DB_PATH)
+        conn = sqlite3.connect(DB_FILE)
         cursor = conn.cursor()
         cursor.execute("SELECT 1 FROM videos WHERE video_id = ?", (video_id,))
         result = cursor.fetchone()
