@@ -16,13 +16,10 @@ PORT = 5069
 
 #########################   CONFIG END   ####################################
 
-# Set up the directories for logs and data
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-LOGS_DIR = os.path.join(BASE_DIR, "logs")
+# Set up the directories for data
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(BASE_DIR, "data")
-os.makedirs(LOGS_DIR, exist_ok=True)
 os.makedirs(DATA_DIR, exist_ok=True)
-LOG_FILE = os.path.join(LOGS_DIR, "ytnotis.log")
 DB_FILE = os.path.join(DATA_DIR, "yt_video_ids.db")
 
 # Get VARS from .env

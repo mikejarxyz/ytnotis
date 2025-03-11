@@ -1,7 +1,12 @@
+import os
 import logging
 from logging.handlers import TimedRotatingFileHandler
 
-from src.config import LOG_FILE
+# Set the Log Dir / filename
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LOGS_DIR = os.path.join(BASE_DIR, "logs")
+os.makedirs(LOGS_DIR, exist_ok=True)
+LOG_FILE = os.path.join(LOGS_DIR, "ytnotis.log")
 
 # Create a TimedRotatingFileHandler
 handler = TimedRotatingFileHandler(
