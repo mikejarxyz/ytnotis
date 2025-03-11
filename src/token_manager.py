@@ -3,8 +3,9 @@ import time
 import hashlib
 import requests
 from urllib.parse import quote
-from config import TOKEN_ROTATION_PERIOD, LOCAL_WEBHOOK_URL, CHANNEL_ID
-from logger import log_message
+
+from src.config import TOKEN_ROTATION_PERIOD, LOCAL_WEBHOOK_URL, CHANNEL_ID
+from src.logger import log_message
 
 # Global variable to store the current token
 CURRENT_TOKEN = None

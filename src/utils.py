@@ -1,6 +1,7 @@
 import datetime
 from datetime import datetime, timedelta
-from config import DISCORD_NOTI_ROLE
+
+from src.config import DISCORD_NOTI_ROLE
 
 def generate_discord_message(video_data):
     """Determines the appropriate Discord message based on video type."""

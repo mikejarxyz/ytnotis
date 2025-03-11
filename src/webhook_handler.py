@@ -1,11 +1,12 @@
 from flask import Blueprint, request, jsonify
 import xml.etree.ElementTree as ET
-from database import is_video_in_db, store_video_id
-from youtube_api import fetch_youtube_video_data
-from discord_notifier import send_discord_message
-from logger import log_message
-from utils import generate_discord_message, should_notify
-from config import CURRENT_TOKEN
+
+from src.database import is_video_in_db, store_video_id
+from src.youtube_api import fetch_youtube_video_data
+from src.discord_notifier import send_discord_message
+from src.logger import log_message
+from src.utils import generate_discord_message, should_notify
+from src.config import CURRENT_TOKEN
 
 webhook_bp = Blueprint('webhook', __name__)
 

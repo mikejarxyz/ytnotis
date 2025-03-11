@@ -1,7 +1,7 @@
 import sqlite3
-import os
-from config import DB_PATH
-from logger import log_message
+
+from src.config import DB_PATH
+from src.logger import log_message
 
 def initialize_database():
     """Creates the database and videos table if they don't exist."""

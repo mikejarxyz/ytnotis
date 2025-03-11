@@ -1,6 +1,7 @@
 import logging
 from logging.handlers import TimedRotatingFileHandler
-from config import LOG_FILE
+
+from src.config import LOG_FILE
 
 # Create a TimedRotatingFileHandler
 handler = TimedRotatingFileHandler(

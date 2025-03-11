@@ -1,7 +1,8 @@
 import time
 import requests
-from config import DISCORD_WEBHOOK_URL
-from logger import log_message
+
+from src.config import DISCORD_WEBHOOK_URL
+from src.logger import log_message
 
 def send_discord_message(message: str, retries: int = 3) -> bool:
     """Sends a message to Discord, with retries on failure."""

@@ -1,6 +1,7 @@
 import requests
-from logger import log_message
-from config import YOUTUBE_API_KEY
+
+from src.logger import log_message
+from src.config import YOUTUBE_API_KEY
 
 def fetch_youtube_video_data(video_id):
     """Call YouTube API to determine if it's a video or livestream."""
