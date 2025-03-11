@@ -8,9 +8,6 @@ from src.logger import log_message
 from src.utils import generate_discord_message, should_notify
 from src.token_manager import CURRENT_TOKEN
 
-webhook_bp = Blueprint('webhook', __name__)
-
-@webhook_bp.route('/webhook', methods=['GET', 'POST'])
 def youtube_webhook():
     """Handles YouTube WebSub webhook."""
     if request.method == 'GET':
