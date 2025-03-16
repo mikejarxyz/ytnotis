@@ -2,6 +2,7 @@ import threading
 from flask import Flask
 from src.token_manager import rotate_token
 from src.webhook_handler import youtube_webhook
+from src.video_rechecks import resume_scheduled_tasks
 from src.config import HOST, PORT
 from src.logger import log_message
 
@@ -17,5 +18,11 @@ def start_token_rotation():
 
 if __name__ == "__main__":
   log_message("🚀 Starting YouTube Webhook Server...")
+
+  # Resume any scheduled rechecks from the database
+  resume_scheduled_tasks()
+
+  # Start token rotation as a background task
   start_token_rotation()
+  
   app.run(host=HOST, port=PORT)

@@ -49,11 +49,16 @@ def rotate_token():
     global CURRENT_TOKEN
     
     while True:
-        if CURRENT_TOKEN is not None:
-            unsubscribe_websub(CURRENT_TOKEN)
-        
-        CURRENT_TOKEN = generate_new_token()
-        subscribe_websub(CURRENT_TOKEN)
-        log_message("🔄 Token rotated")
+        try:
+            if CURRENT_TOKEN is not None:
+                unsubscribe_websub(CURRENT_TOKEN)
+            
+            CURRENT_TOKEN = generate_new_token()
+            subscribe_websub(CURRENT_TOKEN)
+            log_message("🔄 Token rotated")
+        except Exception as e:
+            log_message(f"❌ Error during token rotation: {e}", level="error")
+            time.sleep(5)  # Short delay before retrying in case of failure
+            continue  # Restart the loop immediately
         
         time.sleep(TOKEN_ROTATION_PERIOD)  # Sleep until next rotation

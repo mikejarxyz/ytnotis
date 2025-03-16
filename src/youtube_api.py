@@ -5,7 +5,7 @@ from src.config import YOUTUBE_API_KEY
 
 def fetch_youtube_video_data(video_id):
     """Call YouTube API to determine if it's a video or livestream."""
-    url = f"https://www.googleapis.com/youtube/v3/videos?part=snippet,liveStreamingDetails&id={video_id}&key={YOUTUBE_API_KEY}"
+    url = f"https://www.googleapis.com/youtube/v3/videos?part=snippet,liveStreamingDetails,status&id={video_id}&key={YOUTUBE_API_KEY}"
     
     try:
         response = requests.get(url)
@@ -22,6 +22,8 @@ def fetch_youtube_video_data(video_id):
             "url": f"https://www.youtube.com/watch?v={video_id}",
             "liveBroadcastContent": video["snippet"].get("liveBroadcastContent", "none"),
             "scheduledStartTime": video.get("liveStreamingDetails", {}).get("scheduledStartTime"),
+            "privacyStatus": video["status"].get("privacyStatus"), # Public, Private, or Unlisted
+            "publishAt": video["status"].get("publishAt") # Timestamp for scheduled public release
         }
     
     except requests.exceptions.RequestException as e:
