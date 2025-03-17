@@ -1,5 +1,5 @@
 from flask import request, jsonify
-import datetime
+from datetime import datetime
 import xml.etree.ElementTree as ET
 
 from src.token_manager import get_current_token
