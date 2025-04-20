@@ -1,5 +1,6 @@
 from flask import request, jsonify
 from datetime import datetime
+import time
 import xml.etree.ElementTree as ET
 
 from src.token_manager import get_current_token
@@ -64,7 +65,9 @@ def youtube_webhook():
                 log_message(f"🔁 Video {video_id} already posted. Skipping.")
                 return jsonify({"status": "ignored - duplicate video"}), 200
             
-            # Getting the video data from YouTube API          
+            # Getting the video data from YouTube API
+            log_message(f"📩 Attempting to get video data from YouTube API for video id: {video_id}")
+            time.sleep(5)
             video_data = fetch_youtube_video_data(video_id)
             if not video_data:
                 log_message("❌ Failed to fetch YouTube data.")
