@@ -23,7 +23,7 @@ def initialize_database():
     except sqlite3.Error as e:
         log_message(f"❌ Database initialization failed: {e}", level="error")
 
-def store_video_id(video_id: str, publish_at: str = None, discord_posted: bool = False):
+def store_video_id(video_id: str, publish_at: str = "", discord_posted: bool = False):
     """Insert or update video entry in the database."""
     try:
         conn = sqlite3.connect(DB_FILE)

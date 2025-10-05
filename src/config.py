@@ -1,5 +1,7 @@
 import os
 from dotenv import load_dotenv
+from typing import cast
+from urllib.parse import urlparse
 
 from src.logger import log_message
 
@@ -39,10 +41,25 @@ if not DISCORD_NOTI_ROLE:
     missing_vars.append("VIDEO_NOTIS_ROLE_ID")
 if not DISCORD_WEBHOOK_URL:
     missing_vars.append("DISCORD_WEBHOOK_URL")
+else:
+    parsed = urlparse(DISCORD_WEBHOOK_URL)
+    if not parsed.scheme or not parsed.netloc:
+        missing_vars.append("DISCORD_WEBHOOK_URL (invalid URL format)")
 if not LOCAL_WEBHOOK_URL:
     missing_vars.append("LOCAL_WEBHOOK_URL")
+else:
+    parsed = urlparse(LOCAL_WEBHOOK_URL)
+    if not parsed.scheme or not parsed.netloc:
+        missing_vars.append("LOCAL_WEBHOOK_URL (invalid URL format)")
 
 if missing_vars:
     error_message = f"❌ Missing required environment variables: {', '.join(missing_vars)}"
     log_message(error_message)  # Log the error to the file
     raise ValueError(error_message)  # Then raise the error to stop execution
+
+# Cast to str after validation
+CHANNEL_ID = cast(str, CHANNEL_ID)
+YOUTUBE_API_KEY = cast(str, YOUTUBE_API_KEY)
+DISCORD_NOTI_ROLE = cast(str, DISCORD_NOTI_ROLE)
+DISCORD_WEBHOOK_URL = cast(str, DISCORD_WEBHOOK_URL)
+LOCAL_WEBHOOK_URL = cast(str, LOCAL_WEBHOOK_URL)

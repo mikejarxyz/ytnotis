@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request, jsonify, make_response
 from datetime import datetime
 import time
 import xml.etree.ElementTree as ET
@@ -20,14 +20,14 @@ def youtube_webhook():
     if request.method == 'GET':
         hub_challenge = request.args.get("hub.challenge")
         if hub_challenge:
-          return hub_challenge, 200
+          return make_response(hub_challenge, 200)
         else:
-            return jsonify({"error": "Missing challenge token"}), 400
+            return make_response(jsonify({"error": "Missing challenge token"}), 400)
     
     # Checking to make sure the presented token matches
     if request.args.get("token") != token:
         log_message(f"🔒 Invalid token presented, aborting.")
-        return jsonify({"error": "Invalid token"}), 403
+        return make_response(jsonify({"error": "Invalid token"}), 403)
     
     try:
         raw_data = request.data.decode("utf-8")
@@ -40,7 +40,7 @@ def youtube_webhook():
             # Do nothing if it's a Video Deleted notification
             if root.find(".//at:deleted-entry", namespaces):
                 log_message("⚠️ Video Deletion. Ignoring.")
-                return jsonify({"status": "ignored - deleted video"}), 200
+                return make_response(jsonify({"status": "ignored - deleted video"}), 200)
             
             # Get the video ID and Published info
             video_id_elem = root.find(".//yt:videoId", namespaces)
@@ -51,19 +51,19 @@ def youtube_webhook():
             
             if not video_id:
                 log_message("⚠️ No video ID Detected. Aborting.")
-                return jsonify({"error": "No video ID found"}), 400
+                return make_response(jsonify({"error": "No video ID found"}), 400)
             
             log_message(f"📺 Received Video ID: {video_id}, Published: {published}")
             
             # Check to make sure the video is not stale (editting old content)
             if not should_notify(published):
                 log_message(f"⌛ Published {published}, which is older than the threshold. Aborting")
-                return jsonify({"status": "ignored - outdated video"}), 200
+                return make_response(jsonify({"status": "ignored - outdated video"}), 200)
             
             # If the ID is already in the database, do nothing.
             if is_video_in_db(video_id):
                 log_message(f"🔁 Video {video_id} already posted. Skipping.")
-                return jsonify({"status": "ignored - duplicate video"}), 200
+                return make_response(jsonify({"status": "ignored - duplicate video"}), 200)
             
             # Getting the video data from YouTube API
             log_message(f"📩 Attempting to get video data from YouTube API for video id: {video_id}")
@@ -71,7 +71,7 @@ def youtube_webhook():
             video_data = fetch_youtube_video_data(video_id)
             if not video_data:
                 log_message("❌ Failed to fetch YouTube data.")
-                return jsonify({"error": "Failed to fetch video data"}), 500
+                return make_response(jsonify({"error": "Failed to fetch video data"}), 500)
             
             privacy_status = video_data.get("privacyStatus")
             publish_at = video_data.get("publishAt")
@@ -96,7 +96,7 @@ def youtube_webhook():
                 if send_discord_message(discord_message):
                     store_video_id(video_id, discord_posted=True)
 
-                return jsonify({"status": "notified - upcoming livestream"}), 200
+                return make_response(jsonify({"status": "notified - upcoming livestream"}), 200)
         
             # Case 2: Members-Only Video (Will be public later)
             if privacy_status == "public" and publish_at:
@@ -105,7 +105,7 @@ def youtube_webhook():
                 store_video_id(video_id, publish_at=publish_at, discord_posted=False)
                 schedule_recheck(video_id, publish_at)
 
-                return jsonify({"status": "scheduled - future public video"}), 200
+                return make_response(jsonify({"status": "scheduled - future public video"}), 200)
             
             # Case 3: Instantly Public Video
             if privacy_status == "public" and not publish_at:
@@ -116,13 +116,16 @@ def youtube_webhook():
                 if send_discord_message(discord_message):
                     store_video_id(video_id, discord_posted=True)
 
-                return jsonify({"status": "notified - public video"}), 200     
+                return make_response(jsonify({"status": "notified - public video"}), 200)     
         
         except ET.ParseError:
             log_message("❌ XML Parse Error: Invalid Webhook Payload")
-            return jsonify({"error": "Invalid XML"}), 400
+            return make_response(jsonify({"error": "Invalid XML"}), 400)
     
     except Exception as e:
         log_message(f"❌ ERROR: {str(e)}")
-        return jsonify({"error": "Server Error"}), 500
+        return make_response(jsonify({"error": "Server Error"}), 500)
+
+    # Default response if no specific case matched
+    return make_response(jsonify({"status": "ignored - no action taken"}), 200)
 
